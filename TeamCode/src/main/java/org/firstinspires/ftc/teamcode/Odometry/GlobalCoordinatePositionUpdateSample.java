@@ -54,12 +54,13 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
          * *****************
          */
 
-        //Create and start GlobalCoordinatePosition thread to constantly update the global coordinate positions\
+        //Create and start GlobalCoordinatePosition thread to constantly update the global coordinate positions
         OdometryGlobalCoordinatePosition globalPositionUpdate = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         Thread positionThread = new Thread(globalPositionUpdate);
         positionThread.start();
 
-        globalPositionUpdate.reverseLeftEncoder();
+        globalPositionUpdate.reverseRightEncoder();
+        globalPositionUpdate.reverseNormalEncoder();
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates

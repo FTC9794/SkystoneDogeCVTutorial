@@ -30,7 +30,7 @@ public class OdometryCalibration extends LinearOpMode {
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "rf", rbName = "rb", lfName = "lf", lbName = "lb";
-    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
     final double PIVOT_SPEED = 0.5;
 
@@ -109,8 +109,7 @@ public class OdometryCalibration extends LinearOpMode {
 
         double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
-        double horizontalEncoderOffsetPerDegree = horizontal.getCurrentPosition()/getZAngle();
-        horizontalTickOffset = horizontalEncoderOffsetPerDegree;
+        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(getZAngle());
 
         //Write the constants to text files
         ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
@@ -120,7 +119,7 @@ public class OdometryCalibration extends LinearOpMode {
             telemetry.addData("Odometry System Calibration Status", "Calibration Complete");
             //Display calculated constants
             telemetry.addData("Wheel Base Separation", wheelBaseSeparation);
-            telemetry.addData("Horizontal Encoder Offset", horizontalEncoderOffsetPerDegree);
+            telemetry.addData("Horizontal Encoder Offset", horizontalTickOffset);
 
             //Display raw values
             telemetry.addData("IMU Angle", getZAngle());
@@ -167,8 +166,10 @@ public class OdometryCalibration extends LinearOpMode {
         right_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");
